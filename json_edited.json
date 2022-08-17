@@ -1,0 +1,299 @@
+[
+    {
+        "_id": "_b_mountains",
+        "name": "Горы",
+        "changed": true,
+        "enter condition": {},
+        "zones": [
+            "_z_plateau",
+            "_z_scarp",
+            "_z_rocks",
+            "_z_nek"
+        ]
+    },
+    {
+        "_id": "_b_foothills",
+        "name": "Предгорья",
+        "changed": true,
+        "enter condition": {},
+        "zones": [
+            "_z_ridge",
+            "_z_cirques"
+        ]
+    },
+    {
+        "_id": "_b_glacier",
+        "name": "Ледник",
+        "changed": true,
+        "enter condition": {},
+        "zones": [
+            "_z_icy_slope",
+            "_z_snowy_terrace",
+            "_z_peak"
+        ]
+    },
+    {
+        "_id": "_z_plateau",
+        "name": "Плато",
+        "points": [
+            "_p_plain",
+            "_p_small_boulders",
+            "_p_small_boulders_herbivorous_attack",
+            "_p_large_boulders",
+            "_p_large_boulders_predator_attack"
+        ],
+        "changed": true
+    },
+    {
+        "_id": "_z_scarp",
+        "name": "Крутой склон",
+        "points": []
+    },
+    {
+        "_id": "_z_rocks",
+        "name": "Скалы",
+        "points": []
+    },
+    {
+        "_id": "_z_nek",
+        "name": "Перевал",
+        "points": []
+    },
+    {
+        "_id": "_z_icy_slope",
+        "name": "Ледяной склон",
+        "points": []
+    },
+    {
+        "_id": "_z_snowy_terrace",
+        "name": "Заснеженная терраса",
+        "points": []
+    },
+    {
+        "_id": "_z_peak",
+        "name": "Вершина",
+        "points": []
+    },
+    {
+        "_id": "_z_ridge",
+        "name": "Увал",
+        "points": []
+    },
+    {
+        "_id": "_z_cirques",
+        "name": "Цирк",
+        "points": []
+    },
+    {
+        "_id": "_p_plain",
+        "name": "Ровная поверхность",
+        "stay cost": 2,
+        "quit probability": 0.75,
+        "plant find probability": 0.1,
+        "animal find probability": 0.15,
+        "description": {
+            "touch": "Под вами ровная каменная поверхность. Вокруг не наблюдается заметных препятствий.",
+            "hear": "",
+            "vision": ""
+        },
+        "event": {
+            "description": {
+                "touch": "",
+                "hear": "",
+                "vision": ""
+            },
+            "result": {
+                "critical bad": {
+                    "text": "",
+                    "affected parameters": {}
+                },
+                "bad": {
+                    "text": "",
+                    "affected parameters": {}
+                },
+                "good": {
+                    "text": "",
+                    "affected parameters": {}
+                },
+                "critical good": {
+                    "text": "",
+                    "affected parameters": {}
+                }
+            }
+        },
+        "passage": [],
+        "biomaterials": []
+    },
+    {
+        "_id": "_p_small_boulders",
+        "name": "Малые валуны",
+        "stay cost": 1,
+        "quit probability": 0.55,
+        "plant find probability": 0.2,
+        "animal find probability": 0.35,
+        "description": {
+            "touch": "Под вами неровная каменистая поверхность. Местность усыпана небольшими валунами, в которые вы периодически упираетесь.",
+            "hear": "",
+            "vision": ""
+        },
+        "event": {
+            "description": {
+                "touch": "",
+                "hear": "",
+                "vision": ""
+            },
+            "result": {
+                "critical bad": {
+                    "text": "",
+                    "affected parameters": {}
+                },
+                "bad": {
+                    "text": "",
+                    "affected parameters": {}
+                },
+                "good": {
+                    "text": "",
+                    "affected parameters": {}
+                },
+                "critical good": {
+                    "text": "",
+                    "affected parameters": {}
+                }
+            }
+        },
+        "passage": [],
+        "biomaterials": []
+    },
+    {
+        "_id": "_p_small_boulders_herbivorous_attack",
+        "name": "Малые валуны + Атака травоядного",
+        "stay cost": 1,
+        "quit probability": 0.65,
+        "plant find probability": 0.35,
+        "animal find probability": 0.1,
+        "description": {
+            "touch": "Под вами неровная каменистая поверхность. Местность усыпана небольшими валунами, в которые вы периодически упираетесь.",
+            "hear": "",
+            "vision": ""
+        },
+        "event": {
+            "description": {
+                "touch": "На вас неожиданно напали! С одной стороны по корпусу наносятся тупые удары кого-то массивного.",
+                "hear": "",
+                "vision": ""
+            },
+            "result": {
+                "critical bad": {
+                    "text": "",
+                    "affected parameters": {
+                        "mass": -12
+                    }
+                },
+                "bad": {
+                    "text": "",
+                    "affected parameters": {
+                        "mass": -7
+                    }
+                },
+                "good": {
+                    "text": "",
+                    "affected parameters": {}
+                },
+                "critical good": {
+                    "text": "",
+                    "affected parameters": {
+                        "mass": 5
+                    }
+                }
+            }
+        },
+        "passage": [],
+        "biomaterials": []
+    },
+    {
+        "_id": "_p_large_boulders",
+        "name": "Большие валуны",
+        "stay cost": 1,
+        "quit probability": 0.35,
+        "plant find probability": 0.25,
+        "animal find probability": 0.5,
+        "description": {
+            "touch": "Под вами неровная каменистая поверхность. Местность усыпана крупными валунами, которые приходится огибать по большому радиусу.",
+            "hear": "",
+            "vision": ""
+        },
+        "event": {
+            "description": {
+                "touch": "",
+                "hear": "",
+                "vision": ""
+            },
+            "result": {
+                "critical bad": {
+                    "text": "",
+                    "affected parameters": {}
+                },
+                "bad": {
+                    "text": "",
+                    "affected parameters": {}
+                },
+                "good": {
+                    "text": "",
+                    "affected parameters": {}
+                },
+                "critical good": {
+                    "text": "",
+                    "affected parameters": {}
+                }
+            }
+        },
+        "passage": [],
+        "biomaterials": []
+    },
+    {
+        "_id": "_p_large_boulders_predator_attack",
+        "name": "Большие валуны + Атака хищника",
+        "stay cost": 1,
+        "quit probability": 0.25,
+        "plant find probability": 0.25,
+        "animal find probability": 0.75,
+        "description": {
+            "touch": "Под вами неровная каменистая поверхность. Местность усыпана крупными валунами, которые приходится огибать по большому радиусу.",
+            "hear": "",
+            "vision": ""
+        },
+        "event": {
+            "description": {
+                "touch": "На вас неожиданно напали! С разных сторон по корпусу наносятся тяжёлые и скребущие удары.",
+                "hear": "",
+                "vision": ""
+            },
+            "result": {
+                "critical bad": {
+                    "text": "",
+                    "affected parameters": {
+                        "mass": -35
+                    }
+                },
+                "bad": {
+                    "text": "",
+                    "affected parameters": {
+                        "mass": -20
+                    }
+                },
+                "good": {
+                    "text": "",
+                    "affected parameters": {}
+                },
+                "critical good": {
+                    "text": "",
+                    "affected parameters": {
+                        "mass": 12
+                    }
+                }
+            }
+        },
+        "passage": [],
+        "biomaterials": []
+    }
+]
