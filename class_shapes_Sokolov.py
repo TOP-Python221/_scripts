@@ -1,15 +1,13 @@
 class Rectangle:
-    def __init__(self, height: int, widght: int, sqare: int):
-        self.widght = widght
+    def __init__(self, height: int, width: int):
+        self.width = width
         self.height = height
-        self.sqare = sqare
+        self.area = self.width * self.height
 
 
-r1 = Rectangle()
+r1 = Rectangle(15, 43)
+print(r1.area)
 
-r1.height = 15
-r1.widght = 43
-r1.sqare = 645
 
 
 class Circle:
