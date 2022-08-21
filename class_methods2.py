@@ -11,6 +11,9 @@ class Point:
         return f'({self.x}; {self.y})'
 
     def __eq__(self, other):
+        """Проверяет на равенство объекты self и other.
+
+        Вызывается при вычислении оператора == """
         if isinstance(other, Point):
             if self.x == other.x and self.y == other.y:
                 return True
@@ -20,6 +23,9 @@ class Point:
             raise TypeError('other object is not Point')
 
     def __lt__(self, other):
+        """Проверяет меньше ли объект self, чем other.
+
+        Вызывается при вычислении оператора < """
         if isinstance(other, Point):
             if self.x < other.x and self.y < other.y:
                 return True
@@ -29,6 +35,9 @@ class Point:
             raise TypeError('other object is not Point')
 
     def __gt__(self, other):
+        """Проверяет больше ли объект self, чем other.
+
+        Вызывается при вычислении оператора > """
         if isinstance(other, Point):
             if self.x > other.x and self.y > other.y:
                 return True
@@ -38,8 +47,11 @@ class Point:
             raise TypeError('other object is not Point')
 
     def __sub__(self, other):
+        """Вычисляет расстояние между двумя точками."""
         if isinstance(other, Point):
-            return round(((other.x - self.x)**2 + (other.y - self.y)**2)**0.5, 2)
+            x2x1 = other.x - self.x
+            y2y1 = other.y - self.y
+            return round((x2x1**2 + y2y1**2)**0.5, 2)
         else:
             raise TypeError('other object is not Point')
 
