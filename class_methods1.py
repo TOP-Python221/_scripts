@@ -16,10 +16,14 @@ class Cat:
     def __str__(self):
         return f'<{self.name.title()}: {self.sex}, {"-".join(self.colors)}>'
 
+    # для статических методов:
+    # instance.method(*args) -> Class.method(*args)
     @staticmethod
     def meow() -> None:
         print('Meow!')
 
+    # для обычных методов:
+    # instance.method(*args) -> Class.method(instance, *args)
     def ask_for_food(self) -> None:
         for _ in range(rr(3, 6)):
             self.meow()
@@ -31,12 +35,6 @@ class Cat:
                        0.05,
                        sample(CAT_COLORS, k=rr(1, 4)))
 
-
-# для обычных методов:
-# instance.method(*args) -> Class.method(instance, *args)
-
-# для статических методов:
-# instance.method(*args) -> Class.method(*args)
 
 cat1 = Cat('Яра', 'F', 3.64, ['grey', 'white', 'black'])
 print(cat1)
