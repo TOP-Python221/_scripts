@@ -1,18 +1,30 @@
+import math
+
+
 class Rectangle:
-    def __init__(self, height: int, width: int):
-        self.width = width
+    def __init__(self, height: int, widght: int,):
+        self.widght = widght
         self.height = height
-        # self.area = self.width * self.height
 
     def area(self):
-        return self.width * self.height
-
+        return self.widght * self.height
 
 r1 = Rectangle(15, 43)
-# print(r1.area)
 print(r1.area())
 
 
-
 class Circle:
-    pass
+    def __init__(self, rad: int):
+        self.rad = rad
+
+    def area(self):
+        return math.pi * (self.rad ** 2)
+
+    def len_Circle(self):
+        return 2 * math.pi * self.rad
+
+
+r2 = Circle(16)
+print(r2.area())
+print()
+print(r2.len_Circle())
