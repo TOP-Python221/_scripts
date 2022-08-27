@@ -9,6 +9,9 @@ class Student:
         self.year = year
         self._grade_ave = grade_ave
 
+    def update_grade_ave(self, value: float):
+        self._grade_ave = value
+
     def load_from_db(self):
         # ... self.__id ...
         pass
@@ -27,3 +30,7 @@ st1 = Student(
 print(f'\nпространство имён:\n{st1.__dict__ = }')
 scope = [name for name in dir(st1) if not name.startswith('__')]
 print(f'\nобласть видимости:\n{scope = }\n')
+
+st1.update_grade_ave(4.5)
+print(f'\nпространство имён:\n{st1.__dict__ = }')
+
