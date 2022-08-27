@@ -20,6 +20,8 @@ class Student:
         if isinstance(value, (int, float)):
             self._grade_ave = value
 
+    def __str__(self):
+        return f'{self.grade_ave}'
 
 st1 = Student(
     'L2KJK34f4rt5HLL6H3GF$U$%H',
