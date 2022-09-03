@@ -37,9 +37,20 @@ class Human(Mammals):
 petya = Human()
 pprint(petya.__class__.__mro__)
 
+print()
+
+parrot = Bird()
+pprint(parrot.__class__.__mro__)
+
+print()
+
+lizard = Reptile()
+pprint(lizard.__class__.__mro__)
+
 print('\n')
 
 non_special_attrs = tuple(attr for attr in dir(petya) if not attr.startswith('__'))
+print('область видимости для экземпляра petya')
 pprint(non_special_attrs)
 
 print('\n')
