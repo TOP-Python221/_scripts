@@ -1,0 +1,122 @@
+@startuml
+'skinparam groupInheritance 3
+
+enum Sex {
+    MALE
+    FEMALE
+}
+hide Sex empty members
+
+enum Degree {
+    BACHELOR
+    MASTER
+    DOCTOR
+}
+hide Degree empty members
+
+enum EducationForms {
+    INTRAMURAL
+    EXTRAMURAL
+    REMOTE
+}
+hide EducationForms empty members
+
+
+class Person {
+    +name: str
+    +birthdate: str
+    +sex
+}
+
+class Employee {
+    +position: str
+    +salary: int
+}
+
+class Teacher {
+    +degree
+    +professorship: bool
+    +courses: list[str]
+    +experience: int
+}
+
+class Researcher {
+    +degree
+}
+
+class GeneralPersonnel
+
+class SecurityPersonnel
+
+class Administrator {
+    +supervisor: Administrator
+    +subordinates: list[Employee]
+}
+
+class Student {
+    +form
+    +year: int
+    +average_grade: float
+}
+
+
+class OrganizationLevel {
+    +name: str
+    +head: Employee
+    +employees: list[Employee]
+    +address: str
+}
+
+class University {
+    +institutes: dict[str, Institute]
+}
+
+class Institute {
+    +departments: dict[str, Department]
+}
+
+class Department {
+    +groups: dict[str, Group]
+}
+
+
+abstract list
+class Group {
+    +id: str
+    +specialty: str
+}
+hide list empty members
+
+
+OrganizationLevel <|-- University
+OrganizationLevel <|-- Institute
+OrganizationLevel <|-- Department
+
+University::institutes *-- Institute
+Institute::departments *-- Department
+Department::groups *-- Group
+
+OrganizationLevel::head *-- Employee
+OrganizationLevel::employees *-- Employee
+
+Group --|> list
+Group *-- Student
+
+Person::sex *-- Sex
+Person <|-- Employee
+Employee <|-- Administrator
+Employee <|-- Teacher
+Employee <|-- Researcher
+Employee <|-- SecurityPersonnel
+Employee <|-- GeneralPersonnel
+Person <|-- Student
+
+Teacher::degree *-- Degree
+Researcher::degree *-- Degree
+
+Administrator::supervisor *-- Administrator
+Administrator::subordinates *-- Employee
+
+Student::form *-- EducationForms
+
+@enduml
