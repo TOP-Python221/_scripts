@@ -1,0 +1,42 @@
+@startuml
+
+'note "значения полей attack являются миллисекундами" as attack_note
+
+abstract class Instruments {
+    attack: float
+    {abstract} generate_sound()
+}
+
+class PickedStrings {
+    attack: float = 1
+}
+class BowedStrings {
+    attack: float = 4
+}
+
+
+class Guitar {
+    tuning: tuple = ('e', 'B', 'G', 'D', 'A', 'E')
+    tessitura: tuple = ('E-2', 'G2')
+}
+class Harp {
+    tessitura: tuple = ('C-2', 'G3')
+}
+
+class Violin {
+    tuning: tuple = ('e', 'A', 'D', 'G')
+    tessitura: tuple = ('G-1', 'A4')
+}
+class Cello {
+    tuning: tuple = ('C', 'G', 'D', 'A')
+    tessitura: tuple = ('C-2', 'E2')
+}
+
+Instruments <|-- PickedStrings
+Instruments <|-- BowedStrings
+PickedStrings <|-- Guitar
+PickedStrings <|-- Harp
+BowedStrings <|-- Violin
+BowedStrings <|-- Cello
+
+@enduml
