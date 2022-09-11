@@ -24,59 +24,100 @@ hide EducationForms empty members
 
 class Person {
     +name: str
-    +birthdate: str
+    +birthdate: date
     +sex
+    __init__(name, birthdate, sex)
 }
 
 class Employee {
+    +employment_date: date
     +position: str
     +salary: int
+    .. getters ..
+    +annual_income
+    __
+    __init__(name, birthdate, sex, \n\t\tposition, salary)
+    +index_salary(percent: float): None
+}
+
+class ProfessionalEmployee {
+    +degree = Degree.BACHELOR
+    +experience: int = 0
+    __init__(name, birthdate, sex, position, salary, degree, experience)
+    +years_of_experience(): int
 }
 
 class Teacher {
-    +degree
-    +professorship: bool
-    +courses: list[str]
-    +experience: int
+    +professorship: bool = False
+    -courses: list[str] = []
+    __init__(name, birthdate, sex, position, salary, \n\t\tdegree, professorship, experience)
+    __str__()
+    +add_course(course_name: str)
+    +rem_course(course_name: str)
 }
 
 class Researcher {
-    +degree
+    degree = Degree.MASTER
+    __init__(name, birthdate, sex, \n\t\tposition, salary, degree)
+    __str__()
 }
 
 class GeneralPersonnel
+GeneralPersonnel : __str__()
 
 class SecurityPersonnel
+SecurityPersonnel : __str__()
 
 class Administrator {
     +supervisor: Administrator
-    +subordinates: list[Employee]
+    +subordinates: list[Employee] = []
+    __init__(name, birthdate, sex, position, \n\t\tsalary, supervisor)
+    __str__()
 }
 
 class Student {
-    +form
-    +year: int
-    +average_grade: float
+    +form = EducationForms.INTRAMURAL
+    +year: int = 1
+    +average_grade: float = -1
+    __init__(name, birthdate, sex, form, \n\t\tyear, average_grade)
+    __str__()
+    +year_increment()
 }
 
 
 class OrganizationLevel {
     +name: str
-    +head: Employee
-    +employees: list[Employee]
+    -head: Administrator
+    -employees: list[Employee]
     +address: str
+    #budget: int
+    __init__(name, head, address)
+    __str__()
+    +change_head(Administrator)
+    +hire_employee(Employee)
+    +fire_employee(Employee)
+    +set_annual_budget(amount: int)
 }
 
 class University {
-    +institutes: dict[str, Institute]
+    -institutes: dict[str, Institute]
+    __str__()
+    +add_institute(Institute)
+    +rem_institute(Institute)
 }
 
 class Institute {
-    +departments: dict[str, Department]
+    -departments: dict[str, Department]
+    __str__()
+    +add_department(Department)
+    +rem_department(Department)
 }
 
 class Department {
-    +groups: dict[str, Group]
+    -groups: dict[str, Group]
+    __str__()
+    +add_group(Group)
+    +rem_group(Group)
 }
 
 
@@ -84,6 +125,7 @@ abstract list
 class Group {
     +id: str
     +specialty: str
+    __str__()
 }
 hide list empty members
 
@@ -96,7 +138,7 @@ University::institutes *-- Institute
 Institute::departments *-- Department
 Department::groups *-- Group
 
-OrganizationLevel::head *-- Employee
+OrganizationLevel::head *-- Administrator
 OrganizationLevel::employees *-- Employee
 
 Group --|> list
@@ -105,10 +147,11 @@ Group *-- Student
 Person::sex *-- Sex
 Person <|-- Employee
 Employee <|-- Administrator
-Employee <|-- Teacher
-Employee <|-- Researcher
+Employee <|-- ProfessionalEmployee
 Employee <|-- SecurityPersonnel
 Employee <|-- GeneralPersonnel
+ProfessionalEmployee <|-- Teacher
+ProfessionalEmployee <|-- Researcher
 Person <|-- Student
 
 Teacher::degree *-- Degree
