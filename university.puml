@@ -1,88 +1,52 @@
 @startuml
 'skinparam groupInheritance 3
 
+
 enum Sex {
     MALE
     FEMALE
 }
 hide Sex empty members
 
+
 enum Degree {
     BACHELOR
     MASTER
+    CANDIDATE
     DOCTOR
 }
 hide Degree empty members
 
-enum EducationForms {
+
+enum EducationForm {
     INTRAMURAL
     EXTRAMURAL
     REMOTE
 }
-hide EducationForms empty members
+hide EducationForm empty members
 
 
-class Person {
-    +name: str
-    +birthdate: date
-    +sex
-    __init__(name, birthdate, sex)
+enum ClassForm {
+    LECTURE
+    SEMINAR
+    PRACTICE
+    LABWORK
+    HOMEWORK
+    TEST
+    COLLOQUIUM
+    EXAM
 }
+hide ClassForm empty members
 
-class Employee {
-    +employment_date: date
-    +position: str
-    +salary: int
-    .. getters ..
-    +annual_income
-    __
-    __init__(name, birthdate, sex, \n\t\tposition, salary)
-    +index_salary(percent: float): None
-}
 
-class ProfessionalEmployee {
-    +degree = Degree.BACHELOR
-    +experience: int = 0
-    __init__(name, birthdate, sex, position, salary, degree, experience)
-    +years_of_experience(): int
-}
+abstract list
+hide list empty members
 
-class Teacher {
-    +professorship: bool = False
-    -courses: list[str] = []
-    __init__(name, birthdate, sex, position, salary, \n\t\tdegree, professorship, experience)
-    __str__()
-    +add_course(course_name: str)
-    +rem_course(course_name: str)
-}
 
-class Researcher {
-    degree = Degree.MASTER
-    __init__(name, birthdate, sex, \n\t\tposition, salary, degree)
-    __str__()
-}
+abstract dict
+hide dict empty members
+hide dict
 
-class GeneralPersonnel
-GeneralPersonnel : __str__()
-
-class SecurityPersonnel
-SecurityPersonnel : __str__()
-
-class Administrator {
-    +supervisor: Administrator
-    +subordinates: list[Employee] = []
-    __init__(name, birthdate, sex, position, \n\t\tsalary, supervisor)
-    __str__()
-}
-
-class Student {
-    +form = EducationForms.INTRAMURAL
-    +year: int = 1
-    +average_grade: float = -1
-    __init__(name, birthdate, sex, form, \n\t\tyear, average_grade)
-    __str__()
-    +year_increment()
-}
 
 
 class OrganizationLevel {
@@ -98,6 +62,14 @@ class OrganizationLevel {
     +fire_employee(Employee)
     +set_annual_budget(amount: int)
 }
+OrganizationLevel <|-- University
+OrganizationLevel <|-- Institute
+OrganizationLevel <|-- Department
+OrganizationLevel::head o-- Administrator
+OrganizationLevel::employees o-- Employee
+
+University::institutes o-- Institute
+
 
 class University {
     -institutes: dict[str, Institute]
@@ -106,12 +78,15 @@ class University {
     +rem_institute(Institute)
 }
 
+
 class Institute {
     -departments: dict[str, Department]
     __str__()
     +add_department(Department)
     +rem_department(Department)
 }
+Institute::departments o-- Department
+
 
 class Department {
     -groups: dict[str, Group]
@@ -119,47 +94,158 @@ class Department {
     +add_group(Group)
     +rem_group(Group)
 }
+Department::groups o-- Group
 
 
-abstract list
 class Group {
     +id: str
     +specialty: str
+    +current_timetable:
     __str__()
+    +append_courses_to_students()
 }
-hide list empty members
-
-
-OrganizationLevel <|-- University
-OrganizationLevel <|-- Institute
-OrganizationLevel <|-- Department
-
-University::institutes *-- Institute
-Institute::departments *-- Department
-Department::groups *-- Group
-
-OrganizationLevel::head *-- Administrator
-OrganizationLevel::employees *-- Employee
-
-Group --|> list
+Group ..|> list
 Group *-- Student
 
-Person::sex *-- Sex
-Person <|-- Employee
-Employee <|-- Administrator
-Employee <|-- ProfessionalEmployee
-Employee <|-- SecurityPersonnel
-Employee <|-- GeneralPersonnel
-ProfessionalEmployee <|-- Teacher
-ProfessionalEmployee <|-- Researcher
-Person <|-- Student
 
+
+class SemesterSchedule
+SemesterSchedule ..|> list
+SemesterSchedule *-- ScheduledCourse
+
+
+class Course {
+    +name: str
+    +a_hours: int
+    __init__(name, a_hours)
+    +append_to_program(): ScheduledCourse
+}
+Course <|-- ScheduledCourse
+
+
+class ScheduledCourse {
+'    +schedule: list[Activity]
+    +main_teacher
+    +assistant = None
+    {static} +set_schedule(*week_timetable: classtime)
+}
+ScheduledCourse ..|> list
+ScheduledCourse *-- ClassActivity
+ScheduledCourse *-- ControlActivity
+ScheduledCourse::main_teacher <-- Teacher
+ScheduledCourse::assistant <-- Teacher
+'note left of ScheduledCourse::schedule
+'    classtime = tuple[datetime, timedelta]
+'end note
+
+
+class Activity {
+    +form
+    +schedule: classtime
+}
+Activity <|-- ClassActivity
+Activity <|-- ControlActivity
+Activity::form *-- ClassForm
+
+
+class ClassActivity
+
+
+class ControlActivity {
+    -answer: str
+    #grade: int
+    +load_answer()
+    +grade_answer()
+}
+ControlActivity::load_answer <-- Student
+ControlActivity::grade_answer <-- Teacher
+
+
+
+class Student {
+    +form = EducationForms.INTRAMURAL
+    -year: int = 1
+    #average_grade: float = -1
+    __init__(name, birthdate, sex, form, \n\t\tyear, average_grade)
+    __str__()
+    +year_promotion()
+}
+Student::form *-- EducationForm
+
+
+class Teacher {
+    +professorship: bool = False
+    -courses: list[Course] = []
+    __init__(name, birthdate, sex, position, salary, \n\t\tdegree, professorship, experience)
+    __str__()
+    +add_course(course_name: str)
+    +rem_course(course_name: str)
+}
 Teacher::degree *-- Degree
+Teacher::courses o-- Course
+
+
+class Researcher {
+    degree = Degree.MASTER
+    __init__(name, birthdate, sex, \n\t\tposition, salary, degree)
+    __str__()
+}
 Researcher::degree *-- Degree
 
-Administrator::supervisor *-- Administrator
-Administrator::subordinates *-- Employee
 
-Student::form *-- EducationForms
+class ProfessionalEmployee {
+    #degree = Degree.BACHELOR
+    .. getters ..
+    +years_of_experience: int
+    __
+    __init__(name, birthdate, sex, position, \n\t\tsalary, degree, experience)
+}
+ProfessionalEmployee <|-- Teacher
+ProfessionalEmployee <|-- Researcher
+
+
+class Administrator {
+    +supervisor: Administrator
+    +subordinates: list[Employee] = []
+    __init__(name, birthdate, sex, position, \n\t\tsalary, supervisor)
+    __str__()
+}
+Administrator::supervisor o-- Administrator
+Administrator::subordinates o-- Employee
+
+
+class GeneralPersonnel
+GeneralPersonnel : __str__()
+
+class SecurityPersonnel
+SecurityPersonnel : __str__()
+
+
+class Employee {
+    +employment_date: date
+    +position: str
+    +salary: int
+    .. getters ..
+    +annual_income
+    __
+    __init__(name, birthdate, sex, \n\t\tposition, salary)
+    +index_salary(percent: float): None
+}
+Employee <|-- SecurityPersonnel
+Employee <|-- GeneralPersonnel
+Employee <|-- Administrator
+Employee <|-- ProfessionalEmployee
+
+
+class Person {
+    +name: str
+    +birthdate: date
+    +sex
+    __init__(name, birthdate, sex)
+}
+Person::sex *-- Sex
+Person <|-- Employee
+Person <|-- Student
+
 
 @enduml
