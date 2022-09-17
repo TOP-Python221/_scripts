@@ -106,6 +106,7 @@ class Group {
 }
 Group ..|> list
 Group *-- Student
+Group::current_timetable *-- SemesterSchedule
 
 
 
