@@ -30,8 +30,10 @@ class Journal:
 
 # не нарушает принцип единственной ответственности
 class FileSystemHandler:
+    """Для работы с объектами локальной файловой системы."""
     @staticmethod
     def save_to_file(path_to_journal: Path, data: str):
+        """Записывает строку в файл, перезаписывая его."""
         with open(path_to_journal, 'w') as f_out:
             f_out.write(data)
 
