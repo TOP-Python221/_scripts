@@ -16,7 +16,6 @@ class Person:
         return f'<Person: {self.name}>'
 
 
-# нарушение принцип инверсии зависимостей: отсутствие средств, которые могут быть использованы кодом верхнего уровня для того, чтобы не использовать низкоуровневую реализацию хранилища
 class Relationships:
     def __init__(self):
         # хранилище
@@ -27,6 +26,12 @@ class Relationships:
             (parent, Relation.PARENT, child),
             (child, Relation.CHILD, parent)
         ]
+
+    def find_all_children(self, name: str):
+        for entry in self.storage:
+            if entry[0].name.lower() == name.lower():
+                if entry[1] is Relation.PARENT:
+                    yield entry[2]
 
 
 steve = Person('Steve')
