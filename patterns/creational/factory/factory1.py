@@ -30,11 +30,21 @@ class Point:
     # фабричный метод
     @classmethod
     def new_cartesian(cls, x: Real, y: Real):
+        """Создаёт объект точки, используя декартову систему координат.
+
+        :param x: координата по оси абсцисс
+        :param y: координата по оси ординат
+        """
         return cls(x, y)
 
     # фабричный метод
     @classmethod
     def new_polar(cls, rho: Real, phi: Real):
+        """Создаёт объект точки, используя полярную систему координат.
+
+        :param rho: длина радиус-вектора
+        :param phi: тангенциальный угол
+        """
         x = round(rho * cos(phi), 2)
         y = round(rho * sin(phi), 2)
         return cls(x, y)
