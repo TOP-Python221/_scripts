@@ -55,13 +55,13 @@ class Factory:
 
     @staticmethod
     def create_candidate(name: str, birthdate: str):
-        q = Candidate(
+        person = Candidate(
             name=name,
             birthdate=dt.strptime(birthdate, '%d.%m.%Y')
         )
         # with open('cv.pdf', 'rb') as f_in:
-        #     q.cv = f_in.read()
-        return q
+        #     person.cv = f_in.read()
+        return person
 
     def hire_candidate(self, person: Candidate, position: str, income: int):
         age = (dt.now() - person.birthdate).days // 365
