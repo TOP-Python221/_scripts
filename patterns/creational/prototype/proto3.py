@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass, field
 from abc import ABC
+from time import sleep
 from copy import deepcopy
 
 
@@ -11,6 +12,10 @@ class Unit(ABC):
     attack: int = 5
     defense: int = 3
     morale: int = 0
+
+    def __post_init__(self):
+        sleep(1.5)
+        print(f'прототип {self.__class__.__name__} создан')
 
     def clone(self):
         return deepcopy(self)
@@ -48,17 +53,21 @@ class Hero:
                   monks_amount: int = 0,
                   merchants_amount: int = 0):
         for _ in range(longspears_amount):
+            # быстро
             self.army += [self.__class__.longs_proto.clone()]
+            # долго
+            # self.army += [Longspear(12, 5, 3, 1)]
         for _ in range(monks_amount):
             self.army += [self.__class__.monk_proto.clone()]
         for _ in range(merchants_amount):
             self.army += [self.__class__.merch_proto.clone()]
 
     def __str__(self):
-        return f'{self.name.title()}: {self.class_} {self.level} ур.\n' \
+        return f'\n{self.name.title()}: {self.class_} {self.level} ур.\n' \
                + '\n'.join(f'\t{unit}' for unit in self.army)
 
 
+print()
 
 zig = Hero('Зигфрид', 'Рыцарь-элементалист')
 print(zig)
