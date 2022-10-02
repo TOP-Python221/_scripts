@@ -1,6 +1,7 @@
 """Демонстратор адаптера: реализация для одного класса."""
 
 from abc import ABC, abstractmethod
+import external_classes as external
 
 
 # собственная объектная модель для работы с растровыми изображениями
@@ -20,18 +21,9 @@ class RasterImage(RasterInterface):
         return self.path.rsplit('.', 1)[-1]
 
 
-# найденный класс для работы с векторными изображениями
-class VectorImage:
-    def __init__(self, image_path: str):
-        self.path = image_path
-
-    @staticmethod
-    def render() -> str:
-        return 'svg'
-
 
 class VectorAdapter(RasterInterface):
-    def __init__(self, img_obj: VectorImage):
+    def __init__(self, img_obj: external.VectorImage):
         self.image = img_obj
 
     def rasterize(self):
@@ -49,8 +41,8 @@ print(rast_img1.draw())
 print(rast_img2.draw())
 print(rast_img3.draw(), end='\n\n')
 
-vect_img1 = VectorImage('figure1.svg')
-vect_img2 = VectorImage('figure2.svg')
+vect_img1 = external.VectorImage('figure1.svg')
+vect_img2 = external.VectorImage('figure2.svg')
 
 gallery = [rast_img1, rast_img2, rast_img3, vect_img1, vect_img2]
 try:
