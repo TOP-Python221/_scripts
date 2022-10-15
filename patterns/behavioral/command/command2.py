@@ -107,7 +107,19 @@ comms = BankAccountCompositeCommand(
     BankAccountCommand(ba, Operation.WITHDRAW, 1000),
     BankAccountCommand(ba, Operation.DEPOSIT, 50)
 )
-comms.execute()
+# comms.execute()
+print(f'{ba}')
+# comms.undo()
 print(f'{ba}\n')
-comms.undo()
-print(f'{ba}\n')
+
+
+ba_from = BankAccount(250)
+ba_to = BankAccount(10)
+print(f'Start {ba_from = !s}, {ba_to = !s}')
+
+transaction = BankAccountCompositeCommand(
+    BankAccountCommand(ba_from, Operation.WITHDRAW, 1000),
+    BankAccountCommand(ba_to, Operation.DEPOSIT, 1000)
+)
+transaction.execute()
+print(f'{ba_from = !s}, {ba_to = !s}\n')
