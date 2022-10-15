@@ -73,11 +73,18 @@ class BankAccountCommand:
 
 # инициация команд
 ba = BankAccount(100)
-print(f'Start {ba}')
+print(f'Start {ba}\n')
 
 deposit1 = BankAccountCommand(ba, Operation.DEPOSIT, 50)
 deposit1.execute()
 print(ba)
 
 deposit1.undo()
+print(ba, end='\n\n')
+
+withdraw1 = BankAccountCommand(ba, Operation.WITHDRAW, 1000)
+withdraw1.execute()
+print(ba)
+
+withdraw1.undo()
 print(ba)
