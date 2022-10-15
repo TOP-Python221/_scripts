@@ -26,11 +26,12 @@ class BankAccount:
     def deposit(self, amount: int):
         self.__balance += amount
 
-    def withdraw(self, amount: int):
+    def withdraw(self, amount: int) -> bool:
         if self.__balance - amount >= self.__class__.overdraft_limit:
             self.__balance -= amount
+            return True
         else:
-            pass
+            return False
 
 
 class BankAccountCommand:
@@ -42,16 +43,19 @@ class BankAccountCommand:
         self.addressee = account
         self.action = action
         self.amount = amount
+        self.success = False
 
     def execute(self):
-        """Выполняет операцию."""
+        """Выполняет и журналирует операцию."""
         if self.action is Operation.DEPOSIT:
             self.addressee.deposit(self.amount)
+            self.success = True
         elif self.action is Operation.WITHDRAW:
-            self.addressee.withdraw(self.amount)
+            self.success = self.addressee.withdraw(self.amount)
         else:
             raise TypeError
-        self.__log(log_path)
+        if self.success:
+            self.__log(log_path)
 
     def __log(self, path_to_log: str | Path, cancel: bool = False):
         """Добавляет запись в журнал."""
@@ -64,11 +68,12 @@ class BankAccountCommand:
 
     def undo(self):
         """Отменяет операцию."""
-        if self.action is Operation.DEPOSIT:
-            self.addressee.withdraw(self.amount)
-        elif self.action is Operation.WITHDRAW:
-            self.addressee.deposit(self.amount)
-        self.__log(log_path, True)
+        if self.success:
+            if self.action is Operation.DEPOSIT:
+                self.addressee.withdraw(self.amount)
+            elif self.action is Operation.WITHDRAW:
+                self.addressee.deposit(self.amount)
+            self.__log(log_path, True)
 
 
 # инициация команд
