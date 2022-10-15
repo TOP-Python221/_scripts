@@ -1,7 +1,12 @@
 """Шаблон проектирования: Команда — """
 
 from enum import Enum
+from pathlib import Path
+from sys import path
+from datetime import datetime as dt
 
+SCRIPT_DIR = Path(path[0])
+log_path = SCRIPT_DIR / 'operations.log'
 
 class Operation(Enum):
     DEPOSIT = 0
@@ -46,6 +51,16 @@ class BankAccountCommand:
             self.addressee.withdraw(self.amount)
         else:
             raise TypeError
+        self.__log(log_path)
+
+    def __log(self, path_to_log: str | Path, cancel: bool = False):
+        """Добавляет запись в журнал."""
+        oper = self.action.name
+        if cancel:
+            oper = f'UNDO {oper}'
+        out = f'{dt.now():%Y-%m-%d %H:%M:%S} - {self.addressee} - {oper} - {self.amount}\n'
+        with open(path_to_log, 'a', encoding='utf-8') as f_out:
+            f_out.write(out)
 
     def undo(self):
         """Отменяет операцию."""
@@ -53,6 +68,7 @@ class BankAccountCommand:
             self.addressee.withdraw(self.amount)
         elif self.action is Operation.WITHDRAW:
             self.addressee.deposit(self.amount)
+        self.__log(log_path, True)
 
 
 # инициация команд
