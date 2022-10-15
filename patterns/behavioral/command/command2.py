@@ -54,6 +54,15 @@ class BankAccountCommand(Command):
     amount: int
     success: bool = field(default_factory=bool, init=False)
 
+    def __log(self, path_to_log: str | Path, cancel: bool = False):
+        """Добавляет запись в журнал."""
+        oper = self.action.name
+        if cancel:
+            oper = f'UNDO {oper}'
+        out = f'{dt.now():%Y-%m-%d %H:%M:%S} - {self.account} - {oper} - {self.amount}\n'
+        with open(path_to_log, 'a', encoding='utf-8') as f_out:
+            f_out.write(out)
+
     def execute(self):
         """Выполняет и журналирует операцию."""
         if self.action is Operation.DEPOSIT:
@@ -63,6 +72,8 @@ class BankAccountCommand(Command):
             self.success = self.account.withdraw(self.amount)
         else:
             raise TypeError
+        if self.success:
+            self.__log(log_path)
 
     def undo(self):
         """Отменяет операцию."""
@@ -71,14 +82,32 @@ class BankAccountCommand(Command):
                 self.account.withdraw(self.amount)
             elif self.action is Operation.WITHDRAW:
                 self.account.deposit(self.amount)
+            self.__log(log_path, True)
 
 
 class BankAccountCompositeCommand(Command, list):
-    def __init__(self):
-        pass
+    def __init__(self, *commands: Command):
+        super().__init__()
+        self.extend(commands)
 
     def execute(self):
-        pass
+        for command in self:
+            command.execute()
 
     def undo(self):
-        pass
+        for command in reversed(self):
+            command.undo()
+
+
+ba = BankAccount(200)
+print(f'Start {ba}\n')
+
+comms = BankAccountCompositeCommand(
+    BankAccountCommand(ba, Operation.DEPOSIT, 100),
+    BankAccountCommand(ba, Operation.WITHDRAW, 1000),
+    BankAccountCommand(ba, Operation.DEPOSIT, 50)
+)
+comms.execute()
+print(f'{ba}\n')
+comms.undo()
+print(f'{ba}\n')
