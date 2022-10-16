@@ -28,6 +28,7 @@ class CreatureModifier:
         """Добавляет обработчик."""
         if self.next_modifier is None:
             self.next_modifier = modifier
+            self.next_modifier.previous_modifier = self
         else:
             self.next_modifier.add_modifier(modifier)
 
@@ -36,6 +37,18 @@ class CreatureModifier:
         if self.next_modifier is not None:
             self.next_modifier.handle()
 
+    def clear(self):
+        if self.next_modifier is not None:
+            self.next_modifier.clear()
+        else:
+            self.undo()
+
+    def undo(self):
+        self.next_modifier = None
+        if self.previous_modifier is not None:
+            self.previous_modifier.undo()
+        self.previous_modifier = None
+
 
 class DoubleAttackModifier(CreatureModifier):
     """Обработчик атаки."""
@@ -43,6 +56,10 @@ class DoubleAttackModifier(CreatureModifier):
         """Модифицирует атрибуты обрабатываемого объекта."""
         self.creature.attack *= 2
         super().handle()
+
+    def undo(self):
+        self.creature.attack //= 2
+        super().undo()
 
 
 class IncreaseDefenseModifier(CreatureModifier):
@@ -53,17 +70,24 @@ class IncreaseDefenseModifier(CreatureModifier):
             self.creature.defense += 1
         super().handle()
 
+    def undo(self):
+        """Модифицирует атрибуты обрабатываемого объекта."""
+        if self.creature.attack <= 2*self.creature.defense:
+            self.creature.defense -= 1
+        super().undo()
+
 
 goblin = Creature('Гоблин', 1, 1)
 print(goblin)
 
 inventory = CreatureModifier(goblin)
 
-wood_club = DoubleAttackModifier(goblin)
-inventory.add_modifier(wood_club)
+inventory.add_modifier(DoubleAttackModifier(goblin))
+inventory.add_modifier(IncreaseDefenseModifier(goblin))
+inventory.add_modifier(IncreaseDefenseModifier(goblin))
 
 inventory.handle()
 print(goblin)
 
-# clothes = IncreaseDefenseModifier(goblin)
-# inventory.add_modifier(clothes)
+inventory.clear()
+print(goblin)
