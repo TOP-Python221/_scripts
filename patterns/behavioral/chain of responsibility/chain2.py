@@ -70,6 +70,7 @@ class Creature:
 
 
 class CreatureModifier(ABC):
+    """Абстрактный базовый класс для модификаторов."""
     def __init__(self, game: Game, creature: Creature):
         self.game = game
         self.creature = creature
@@ -77,6 +78,7 @@ class CreatureModifier(ABC):
         self.game.handlers.append(self.handle)
 
     def remove_from_chain(self):
+        """Удаляет обработчик модификатора из цепочки."""
         self.game.handlers.remove(self.handle)
 
     @abstractmethod
@@ -89,9 +91,6 @@ class DoubleAttackModifier(CreatureModifier):
         if self.creature is sender:
             if query.parameter is Parameter.ATTACK:
                 query.value *= 2
-        # для отладчика
-        pass
-
 
 
 class IncreaseDefenseModifier(CreatureModifier):
@@ -100,8 +99,6 @@ class IncreaseDefenseModifier(CreatureModifier):
             if query.parameter is Parameter.DEFENSE:
                 if self.creature.final_attack <= 2*query.value:
                     query.value += 1
-        # для отладчика
-        pass
 
 
 new_game = Game()
@@ -110,4 +107,13 @@ goblin = Creature(new_game, 'strong goblin', 2, 2)
 print(goblin)
 
 bronze_spear = DoubleAttackModifier(new_game, goblin)
-print(goblin)
+print(f'with spear {goblin}')
+
+stilet = DoubleAttackModifier(new_game, goblin)
+print(f'with stilet {goblin}')
+
+helm = IncreaseDefenseModifier(new_game, goblin)
+print(f'with helm {goblin}')
+
+bronze_spear.remove_from_chain()
+print(f'without spear {goblin}')
