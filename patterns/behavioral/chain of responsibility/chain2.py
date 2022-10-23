@@ -1,6 +1,7 @@
-"""Брокер обработчиков для Цепочки ответственности."""
-from abc import ABC, abstractmethod
+"""Демонстратор цепочки ответственности: брокер обработчиков."""
+
 from enum import Enum
+from abc import ABC, abstractmethod
 
 
 class Parameter(Enum):
