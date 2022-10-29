@@ -20,4 +20,5 @@ print(c1.calc(sub))
 print(c1.calc(mul))
 print(c1.calc(truediv), end='\n\n')
 
+print(c1.calc(print))
 print(c1.calc(Calculator))
