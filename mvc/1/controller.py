@@ -1,7 +1,9 @@
 """Controller (MVC): управляющий модуль, точка входа."""
+from time import sleep
 
 import model
-import view
+# import view
+import view_gui as view
 
 
 def start():
@@ -13,23 +15,23 @@ def start():
 def ask():
     """Вызывает представление с вопросом и вводом ответа."""
     view.ask_view()
+    validate_answer()
+
+
+def validate_answer():
+    """Проверяет корректность строки с ответом."""
     while True:
         answer = view.answer_view()
-        if validate_answer(answer):
+        if answer in ('y', 'д', 'n', 'н'):
             break
-    if process_answer(answer):
+    process_answer(answer)
+
+
+def process_answer(string: str):
+    """Проверяет положительный ответ."""
+    if string in ('y', 'д'):
         get_people()
     end()
-
-
-def validate_answer(string: str) -> bool:
-    """Проверяет корректность строки с ответом."""
-    return string in ('y', 'д', 'n', 'н')
-
-
-def process_answer(string: str) -> bool:
-    """Проверяет положительный ответ."""
-    return string in ('y', 'д')
 
 
 def get_people():
