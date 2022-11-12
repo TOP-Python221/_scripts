@@ -11,12 +11,12 @@ def start_view():
 
 def ask_view():
     """Отображает вопрос."""
-    print('\nВывести все записи из БД? [y/n] > ', end='')
+    print('\nВывести все записи из БД? [y/n]')
 
 
 def answer_view() -> str:
     """Получает и возвращает ответ."""
-    return input()
+    return input(' > ')
 
 
 def show_all(people: tuple):
