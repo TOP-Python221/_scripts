@@ -11,7 +11,7 @@ __items: list[dict] = []
 
 
 def create_items(items_list: list[dict]):
-    """Добавляет несколько элементов в хранилище."""
+    """Добавляет несколько элементов в список."""
     global __items
     intersection = set(item['name'] for item in __items) & \
                    set(item['name'] for item in items_list)
@@ -22,8 +22,10 @@ def create_items(items_list: list[dict]):
 
 
 def create_item(name: str, price: str, quantity: int):
-    """Добавляет один элемент в хранилище."""
+    """Добавляет один элемент в список."""
     global __items
+    if price == '':
+        raise ValueError('price takes an empty string')
     if not tuple(filter(
         lambda item: item['name'] == name,
         __items
@@ -33,14 +35,14 @@ def create_item(name: str, price: str, quantity: int):
         raise ItemAlreadyStoredError(name)
 
 
-def read_items():
-    """Возвращает все элементы из хранилища в виде полной несвязанной копии."""
+def read_items() -> list[dict]:
+    """Возвращает все элементы из списка в виде полной несвязанной копии."""
     global __items
     return [item.copy() for item in __items]
 
 
 def read_item(name: str) -> dict:
-    """Возвращает элемент из хранилища по имени."""
+    """Возвращает один элемент из списка по имени."""
     global __items
     result = tuple(filter(
         lambda item: item['name'] == name,
@@ -53,10 +55,12 @@ def read_item(name: str) -> dict:
 
 
 def update_item(name: str, /, *, price: str = None, quantity: int = None):
-    """Обновляет поля 'цена' и/или 'количество' для элемента в хранилище."""
+    """Обновляет поля 'цена' и/или 'количество' для одного элемента в списке."""
     global __items
     if price is None and quantity is None:
         raise TypeError('update_item() should take at least one key argument')
+    if price == '':
+        raise ValueError('price takes an empty string')
     result = tuple(
         (i, item)
         for i, item in enumerate(__items)
@@ -74,7 +78,7 @@ def update_item(name: str, /, *, price: str = None, quantity: int = None):
 
 
 def delete_item(name: str):
-    """Удаляет элемент из хранилища по имени."""
+    """Удаляет один элемент из списка по имени."""
     global __items
     result = tuple(filter(
         lambda item: item['name'] == name,
@@ -108,6 +112,12 @@ if __name__ == '__main__':
     print()
 
     delete_item('Шоколад')
+    pprint(read_items())
+
+    print()
+
+    update_item('Хлеб', quantity=0)
+    update_item('Хлеб', price='')
     pprint(read_items())
 
     print()
