@@ -1,3 +1,24 @@
+from enum import Enum
+from random import randrange as rr
+from typing import Optional, Generator
+
+# переменные для аннотации
+CellsTable = list[list['Cell']]
+
+
+class CellState(Enum):
+    CLOSE = 'closed'
+    FLAG = 'flagged'
+    QUESTION = 'questioned'
+    OPEN = 'opened'
+
+    @classmethod
+    def cycling_states(cls):
+        q = list(cls)
+        q.remove(cls.OPEN)
+        return q
+
+
 class Cell:
     """
     Описывает сущность одной клетки игрового поля.
@@ -5,11 +26,11 @@ class Cell:
     def __init__(self, row: int, column: int):
         self.row = row
         self.column = column
-        self.state: str = 'closed'
+        self.state: CellState = CellState.CLOSE
         self.mined: bool = False
         self.counter: int = 0
 
-    mark_cycle: list[str] = ('closed', 'flagged', 'questioned')
+    mark_cycle: list[CellState] = CellState.cycling_states()
     def next_mark(self) -> None:
         """Циклически переключает состояния клетки."""
         if self.state in self.mark_cycle:
@@ -18,8 +39,8 @@ class Cell:
 
     def open(self) -> None:
         """Переключает клетку в состояние 'открыто'."""
-        if self.state != 'flagged':
-            self.state = 'opened'
+        if self.state is not CellState.FLAG:
+            self.state = CellState.OPEN
 
 
 MIN_ROWS = 5
@@ -56,14 +77,92 @@ class Model:
         if MIN_MINES <= mines <= MAX_MINES:
             self.mines = mines
 
-        self.first_step = True
-        self.game_over = False
+        self.first_step: bool = True
+        self.game_over: bool = False
 
-        self.table = []
+        self.table: CellsTable = []
         for i in range(self.rows):
             self.table += [[]]
             for j in range(self.columns):
                 self.table[i] += [Cell(i, j)]
+
+    def generate_mines(self) -> None:
+        """Располагает заданное количество мин на случайных клетках игрового поля."""
+        for _ in range(self.mines):
+            while True:
+                i = rr(self.rows)
+                j = rr(self.columns)
+                cell = self.table[i][j]
+                if not cell.mined and cell.state is not CellState.OPEN:
+                    cell.mined = True
+                    break
+
+    def is_win(self) -> bool:
+        """Проверяет, достигнут ли выигрыш."""
+        for row in self.table:
+            for cell in row:
+                op_or_fl = cell.state is CellState.OPEN \
+                           or cell.state is CellState.FLAG
+                if not cell.mined and not op_or_fl:
+                    return False
+        return True
+
+    def is_game_over(self) -> bool:
+        """Проверяет, случился ли проигрыш."""
+        return self.game_over
+
+    def get_cell(self, row: int, column: int) -> Optional[Cell]:
+        """Возвращает клетку по заданным индексам, если индексы находятся в заданном диапазоне, иначе None."""
+        if 0 <= row < self.rows and 0 <= column < self.columns:
+            return self.table[row][column]
+        else:
+            return None
+
+    def get_cell_neighbours(self, row: int, column: int) -> Generator[Cell]:
+        """Возвращает список клеток, соседних с клеткой, заданной переданными индексами."""
+        neighbours = []
+        for i in range(row-1, row+2):
+            neighbours += [self.get_cell(i, column-1)]
+            if i != row:
+                neighbours += [self.get_cell(i, column)]
+            neighbours += [self.get_cell(i, column+1)]
+        return (cell for cell in neighbours if cell is not None)
+
+    def get_mines_around_cell(self, row: int, column: int) -> int:
+        """Подсчитывает и возвращает количество заминированных клеток рядом с клеткой, заданной переданными индексами."""
+        neighbours = self.get_cell_neighbours(row, column)
+        return sum(cell.mined for cell in neighbours)
+
+    def next_cell_mark(self, row: int, column: int) -> None:
+        """Переключает отметку на клетке."""
+        cell = self.get_cell(row, column)
+        if cell:
+            cell.next_mark()
+
+    def open_cell(self, row: int, column: int) -> None:
+        """Открывает клетку, проверяет мину, подсчитывает количество мин рядом с открытой, рекурсивно открывает соседние пустые клетки."""
+        cell = self.get_cell(row, column)
+        if not cell:
+            return
+
+        cell.open()
+
+        if cell.mined:
+            self.game_over = True
+            return
+
+        if self.first_step:
+            self.first_step = False
+            self.generate_mines()
+
+        cell.counter = self.get_mines_around_cell(row, column)
+
+        if cell.counter == 0:
+            neighbours = self.get_cell_neighbours(row, column)
+            for n_cell in neighbours:
+                if n_cell.state is CellState.CLOSE:
+                    self.open_cell(n_cell.row, n_cell.column)
+
 
 
 class View:
@@ -71,7 +170,11 @@ class View:
 
 
 class Controller:
-    pass
+    def __init__(self, model_obj: Model, view_obj: View):
+        self.model_obj = model_obj
+        self.view_obj = view_obj
+
+
 
 
 if __name__ == '__main__':
