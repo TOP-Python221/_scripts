@@ -2,15 +2,20 @@ from enum import Enum
 from random import randrange as rr
 from typing import Optional, Generator
 
+import tkinter as tk
+from tkinter.messagebox import showinfo
+from tkinter.constants import BOTTOM, RIGHT, LEFT, X, SUNKEN
+
 # переменные для аннотации
 CellsTable = list[list['Cell']]
+ButtonsBoard = list[list[tk.Button]]
 
 
 class CellState(Enum):
-    CLOSE = 'closed'
-    FLAG = 'flagged'
-    QUESTION = 'questioned'
-    OPEN = 'opened'
+    CLOSE = ''
+    FLAG = 'P'
+    QUESTION = '?'
+    OPEN = 'o'
 
     @classmethod
     def cycling_states(cls):
@@ -118,7 +123,7 @@ class Model:
         else:
             return None
 
-    def get_cell_neighbours(self, row: int, column: int) -> Generator[Cell]:
+    def get_cell_neighbours(self, row: int, column: int) -> Generator:
         """Возвращает список клеток, соседних с клеткой, заданной переданными индексами."""
         neighbours = []
         for i in range(row-1, row+2):
@@ -169,16 +174,50 @@ class View:
     pass
 
 
+
 class Controller:
-    def __init__(self, model_obj: Model, view_obj: View):
-        self.model_obj = model_obj
-        self.view_obj = view_obj
+    def __init__(self, model_obj: Model):
+        self.model = model_obj
+        self.view = None
 
+    def set_view(self, view_obj: View):
+        self.view = view_obj
 
+    def start_new_game(self):
+        settings = self.view.game_settings
+        try:
+            self.model.start_game(*settings)
+        except:
+            self.model.start_game(
+                self.model.rows,
+                self.model.columns,
+                self.model.mines
+            )
+        self.view.create_board()
+
+    def on_left_click(self, row: int, column: int):
+        self.model.open_cell(row, column)
+        self.view.sync_model()
+        if self.model.is_win():
+            self.view.show_win_message()
+            self.start_new_game()
+        elif self.model.is_game_over():
+            self.view.show_game_over_message()
+            self.start_new_game()
+
+    def on_right_click(self, row: int, column: int):
+        self.model.next_cell_mark(row, column)
+        self.view.block_button(
+            row, column,
+            self.model.get_cell(row, column).state is CellState.FLAG
+        )
+        self.view.sync_model()
 
 
 if __name__ == '__main__':
     m = Model()
-    # v = View()
-    # c = Controller(m, v)
+    c = Controller(m)
+    v = View(m, c)
 
+    v.pack()
+    v.mainloop()
