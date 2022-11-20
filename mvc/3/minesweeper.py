@@ -170,8 +170,153 @@ class Model:
 
 
 
-class View:
-    pass
+class View(tk.Frame):
+    def __init__(self,
+                 model_obj: Model,
+                 controller_obj: 'Controller',
+                 parent=None):
+        super().__init__(parent)
+
+        self.model = model_obj
+        self.controller = controller_obj
+        self.controller.set_view(self)
+
+        self.create_board()
+        self.create_panel()
+
+    def create_board(self):
+        try:
+            self.board.pack_forget()
+            self.board.destroy()
+
+            self.rows.set(str(self.model.rows))
+            self.columns.set(str(self.model.columns))
+            self.mines.set(str(self.model.mines))
+        except:
+            pass
+
+        self.board = tk.Frame(self)
+        self.board.pack()
+
+        self.buttons: ButtonsBoard = []
+        for i in range(self.model.rows):
+            row = tk.Frame(self.board)
+            row.pack()
+            self.buttons += [[]]
+            for j in range(self.model.columns):
+                btn = tk.Button(
+                    row,
+                    width=2, height=1,
+                    font=('Corbel', 20),
+                    command=lambda r=i, c=j: self.controller.on_left_click(r, c)
+                )
+                btn.pack(side=LEFT)
+                btn.bind(
+                    '<Button-3>',
+                    lambda event, r=i, c=j: self.controller.on_right_click(r, c)
+                )
+                self.buttons[i] += [btn]
+
+    def create_panel(self):
+        panel = tk.Frame(self)
+        panel.pack(side=BOTTOM, fill=X)
+
+        tk.Button(
+            panel,
+            text='Новая игра',
+            font=('Corbel', 16),
+            command=self.controller.start_new_game
+        ).pack(side=RIGHT)
+
+        self.mines = tk.StringVar(value=str(self.model.mines))
+        tk.Spinbox(
+            panel,
+            from_=MIN_MINES,
+            to=MAX_MINES,
+            textvariable=self.mines,
+            width=4,
+            font=('Corbel', 16),
+        ).pack(side=RIGHT)
+        tk.Label(
+            panel,
+            text='Количество мин: ',
+            font=('Corbel', 16)
+        ).pack(side=RIGHT)
+
+        self.columns = tk.StringVar(value=str(self.model.columns))
+        tk.Spinbox(
+            panel,
+            from_=MIN_COLUMNS,
+            to=MAX_COLUMNS,
+            textvariable=self.columns,
+            width=3,
+            font=('Corbel', 16)
+        ).pack(side=RIGHT)
+        tk.Label(
+            panel,
+            text=' x ',
+            font=('Corbel', 16)
+        ).pack(side=RIGHT)
+
+        self.rows = tk.StringVar(value=str(self.model.rows))
+        tk.Spinbox(
+            panel,
+            from_=MIN_ROWS,
+            to=MAX_ROWS,
+            textvariable=self.rows,
+            width=3,
+            font=('Corbel', 16)
+        ).pack(side=RIGHT)
+        tk.Label(
+            panel,
+            text='Размер поля: ',
+            font=('Corbel', 16)
+        ).pack(side=RIGHT)
+
+    @property
+    def game_settings(self) -> tuple[int, int, int]:
+        return int(self.rows.get()), int(self.columns.get()), int(self.mines.get())
+
+    @staticmethod
+    def show_win_message():
+        showinfo('Поздравляем!', 'Вы победили!')
+
+    @staticmethod
+    def show_game_over_message():
+        showinfo('Игра окончена', 'Вы проиграли')
+
+    def sync_model(self):
+        for i in range(self.model.rows):
+            for j in range(self.model.columns):
+                cell = self.model.get_cell(i, j)
+                if cell:
+                    btn = self.buttons[i][j]
+
+                    if cell.mined and self.model.is_game_over():
+                        btn.config(bg='black', text='')
+
+                    if cell.state is CellState.CLOSE:
+                        btn.config(text=CellState.CLOSE.value)
+                    elif cell.state is CellState.FLAG:
+                        btn.config(text=CellState.FLAG.value)
+                    elif cell.state is CellState.QUESTION:
+                        btn.config(text=CellState.QUESTION.value)
+                    elif cell.state is CellState.OPEN:
+                        btn.config(relief=SUNKEN, text='')
+                        if cell.counter > 0:
+                            btn.config(text=cell.counter)
+                        elif cell.mined:
+                            btn.config(bg='red')
+
+    def block_button(self, row: int, column: int, block: bool = True):
+        btn = self.buttons[row][column]
+        if not btn:
+            return
+
+        if block:
+            btn.bind('<Button-1>', 'break')
+        else:
+            btn.unbind('<Button-1>')
 
 
 
