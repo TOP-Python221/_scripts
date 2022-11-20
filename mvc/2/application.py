@@ -1,4 +1,5 @@
 """Приложение с интерфейсом командной строки (CLI) для работы с товарной базой магазина."""
+from typing import Type
 
 import storage_operations as so
 
@@ -125,4 +126,120 @@ class View:
         print('--------------------------------------------------------------')
 
 
+class Controller:
+    """
 
+    """
+    def __init__(self, model_cls: Type, view_obj: View):
+        self.__ModelCls = model_cls
+        self.model = None
+        self.view = view_obj
+
+    def start(self, items: list[dict] = None):
+        self.model = self.__ModelCls(items)
+
+    def show_items(self, numbered_list: bool = False):
+        data = self.model.read_items()
+        if numbered_list:
+            self.view.show_number_point_list(self.model.item_type,
+                                             data)
+        else:
+            self.view.show_bullet_point_list(self.model.item_type,
+                                             data)
+
+    def show_item(self, name: str):
+        try:
+            data = self.model.read_item(name)
+            self.view.show_item(self.model.item_type,
+                                name,
+                                data)
+        except so.ItemNotStoredError as e:
+            self.view.display_item_not_yet_stored_error(
+                self.model.item_type,
+                name,
+                str(e)
+            )
+
+    def insert_item(self, name: str, price: str, quantity: int):
+        try:
+            self.model.create_item(name, price, quantity)
+            self.view.display_item_stored(self.model.item_type,
+                                          name)
+        except so.ItemAlreadyStoredError as e:
+            self.view.display_item_already_stored_error(
+                self.model.item_type,
+                name,
+                str(e)
+            )
+
+    def update_item(self,
+                    name: str,
+                    /, *,
+                    new_price: str = None,
+                    new_quantity: int = None):
+        try:
+            data = self.model.read_item(name)
+            self.model.update_item(name,
+                                   new_price=new_price,
+                                   new_quantity=new_quantity)
+            self.view.display_item_updated(
+                name,
+                data['price'],
+                data['quantity'],
+                new_price if new_price is not None else data['price'],
+                new_quantity if new_quantity is not None else data['quantity']
+            )
+        except so.ItemNotStoredError as e:
+            self.view.display_item_not_yet_stored_error(
+                self.model.item_type,
+                name,
+                str(e)
+            )
+
+    def delete_item(self, name: str):
+        try:
+            self.model.delete_item(name)
+            self.view.display_item_deletion(name)
+        except so.ItemNotStoredError as e:
+            self.view.display_item_not_yet_stored_error(
+                self.model.item_type,
+                name,
+                str(e)
+            )
+
+
+# тесты
+if __name__ == '__main__':
+
+    goods = [
+        {'name': 'Хлеб', 'price': '36.22', 'quantity': 8},
+        {'name': 'Молоко', 'price': '91.80', 'quantity': 11},
+        {'name': 'Шоколад', 'price': '158.00', 'quantity': 5},
+    ]
+
+    app = Controller(Model, View())
+    app.start(goods)
+
+    app.show_items()
+    print()
+
+    app.show_items(True)
+    print()
+
+    app.show_item('Пиво')
+    print()
+
+    app.insert_item('Пиво', '75.00', 20)
+    print()
+
+    app.show_item('Пиво')
+    print()
+
+    app.insert_item('Хлеб', '75.00', 20)
+    print()
+
+    app.update_item('Пиво', new_quantity=16)
+    print()
+
+    app.delete_item('Шоколад')
+    print()

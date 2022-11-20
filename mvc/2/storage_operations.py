@@ -90,16 +90,14 @@ def delete_item(name: str):
         raise ItemNotStoredError(name)
 
 
-__goods = [
-    {'name': 'Хлеб', 'price': '36.22', 'quantity': 8},
-    {'name': 'Молоко', 'price': '91.80', 'quantity': 11},
-    {'name': 'Шоколад', 'price': '158.00', 'quantity': 5},
-]
-create_items(__goods)
-
-
 # тесты
 if __name__ == '__main__':
+    __goods = [
+        {'name': 'Хлеб', 'price': '36.22', 'quantity': 8},
+        {'name': 'Молоко', 'price': '91.80', 'quantity': 11},
+        {'name': 'Шоколад', 'price': '158.00', 'quantity': 5},
+    ]
+    create_items(__goods)
     pprint(read_items())
 
     print()
