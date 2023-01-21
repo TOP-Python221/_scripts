@@ -27,8 +27,7 @@ create table labels (
     `name` varchar(100) not null,
     constraint `CH_labels_name` check (`name` <> ''),
     `country_id` tinyint unsigned not null,
-    `office_address` varchar (200) not null,
-    constraint `CH_labels_office_address` check (`office_address` <> '')
+    `office_address` varchar (200) not null
 );
 
 create table albums (
