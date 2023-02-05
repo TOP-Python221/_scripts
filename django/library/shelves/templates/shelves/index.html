@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Библиотека</title>
+</head>
+<body>
+    <div align="center">
+        <h2>Библиотека</h2>
+    </div>
+    <div align="center">
+        <h4>Все авторы</h4>
+    </div>
+    <div>
+        <table>
+            {% for author in authors %}
+                <tr>
+                    <td><a href="{% url author.url_name %}">{{ author }}</a></td>
+                </tr>
+            {% endfor  %}
+        </table>
+    </div>
+    <div align="center">
+        <h4>Все издательства</h4>
+    </div>
+    <div>
+        <table>
+            {% for pub in publishers %}
+                <tr>
+                    <td>{{ pub }}</td>
+                </tr>
+            {% endfor  %}
+        </table>
+    </div>
+</body>
+</html>
