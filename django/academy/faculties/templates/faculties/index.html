@@ -15,9 +15,9 @@
         <table cellpadding="5">
             {% for object in object_list %}
                 <tr>
-                    <td>{{ object }}</td>
+                    <td><a href="{% url object.acronym %}">{{ object }}</a></td>
                 </tr>
-            {% endfor  %}
+            {% endfor %}
         </table>
     </div>
 </body>
