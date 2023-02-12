@@ -10,20 +10,26 @@
   </head>
   <body>
 
+<!-- header -->
     {% block body_header %}
       <div>
         {% include header_menu|default:"faculties/topmenu.html" %}
       </div>
     {% endblock body_header %}
+<!-- /header -->
 
+<!-- content -->
     {% block body_content %}
       <div align="center">
         <h1>{{ content_title|default:"ITMO University" }}</h1>
       </div>
     {% endblock body_content %}
+<!-- /content -->
 
+<!-- footer -->
     {% block body_footer %}
     {% endblock body_footer %}
+<!-- /footer -->
 
   </body>
 </html>

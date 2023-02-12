@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.views.generic import ListView, DetailView, FormView
+from django.views.generic import ListView, DetailView
 
 from faculties.models import Faculty
 
