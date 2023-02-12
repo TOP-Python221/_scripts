@@ -1,7 +1,7 @@
 from django.urls import path
 
 from faculties.models import Faculty
-from faculties.views import MainPage, FacultyView
+from faculties.views import MainPage, FacultyView, contact_view
 
 urlpatterns = []
 
@@ -14,5 +14,6 @@ for faculty in Faculty.objects.all():
     )]
 
 urlpatterns += [
+    path('contact/', contact_view, name='contact'),
     path('', MainPage.as_view(), name='main'),
 ]

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>{{ page_title|default:"ITMO" }}</title>
+
+    {% block head_extra %}
+    {% endblock head_extra %}
+
+  </head>
+  <body>
+
+    {% block body_header %}
+      <div>
+        {% include header_menu|default:"faculties/topmenu.html" %}
+      </div>
+    {% endblock body_header %}
+
+    {% block body_content %}
+      <div align="center">
+        <h1>{{ content_title|default:"ITMO University" }}</h1>
+      </div>
+    {% endblock body_content %}
+
+    {% block body_footer %}
+    {% endblock body_footer %}
+
+  </body>
+</html>

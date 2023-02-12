@@ -1,4 +1,5 @@
-from django.views.generic import ListView, DetailView
+from django.http import HttpResponse
+from django.views.generic import ListView, DetailView, FormView
 
 from faculties.models import Faculty
 
@@ -23,3 +24,6 @@ class FacultyView(DetailView):
         context['students'] = students
         return context
 
+
+def contact_view(request):
+    return HttpResponse()
