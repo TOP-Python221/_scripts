@@ -1,5 +1,7 @@
 {% extends base_template|default:"faculties/base.html" %}
 
+{% load user_tags %}
+
 
 {% block body_content %}
 
@@ -13,9 +15,20 @@
   <div>
     <table cellpadding="5">
       {% for object in object_list %}
+
+        {% if view == "main" %}
+          {% define object.acronym as url_toggle %}
+        {% elif view == "faculty" %}
+          {% define 'main' as url_toggle %}
+        {% endif %}
+
         <tr>
-          <td><a href="{% url object.acronym %}">{{ object }}</a></td>
+          <td colspan="2"><a href="{% url url_toggle %}">{{ object }}</a></td>
         </tr>
+
+        {% block faculty_departments %}
+        {% endblock faculty_departments %}
+
       {% endfor %}
     </table>
   </div>

@@ -1,0 +1,15 @@
+{% extends "faculties/index.html" %}
+
+
+{% block faculty_departments %}
+
+  {% if object.id == id %}
+    {% for dep in object.department_set.all %}
+      <tr>
+        <td width="30"></td>
+        <td>{{ dep }}</td>
+      </tr>
+    {% endfor %}
+  {% endif %}
+
+{% endblock faculty_departments %}

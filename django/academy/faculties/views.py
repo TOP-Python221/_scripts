@@ -8,6 +8,25 @@ class MainPage(ListView):
     model = Faculty
     template_name = 'faculties/index.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['view'] = 'main'
+        return context
+
+
+class FacultiesExtended(DetailView):
+    model = Faculty
+    template_name = 'faculties/faculty_extended.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context |= {
+            'object_list': self.get_queryset(),
+            'view': 'faculty',
+            'id': self.object.id,
+        }
+        return context
+
 
 class FacultyView(DetailView):
     model = Faculty

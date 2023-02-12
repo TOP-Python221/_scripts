@@ -1,14 +1,15 @@
 from django.urls import path
 
 from faculties.models import Faculty
-from faculties.views import MainPage, FacultyView, contact_view
+from faculties.views import MainPage, FacultyView, FacultiesExtended, contact_view
 
 urlpatterns = []
 
 for faculty in Faculty.objects.all():
     urlpatterns += [path(
         f'{faculty.acronym}/',
-        FacultyView.as_view(),
+        # FacultyView.as_view(),
+        FacultiesExtended.as_view(),
         kwargs={'pk': faculty.id},
         name=f'{faculty.acronym}',
     )]

@@ -1,34 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ object.slug.upper }}</title>
-</head>
-<body>
-    <div align="right">
-        <a href="{% url 'main' %}">Back</a>
-    </div>
-    <div align="center">
-        <h1>{{ object.name }}</h1>
-    </div>
-    <div align="center">
-        <h2>Departments</h2>
-    </div>
-    <div>
-        <table cellpadding="5">
-            {% for dep in object.department_set.all %}
-                <tr>
-                    <td>{{ dep }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-    </div>
-    <br>
-    <div>
-        <p><strong>Total students:</strong> {{ students }}</p>
-    </div>
-    <div>
-        <p><strong>Financing:</strong> {{ object.financing }}</p>
-    </div>
-</body>
-</html>
+{% extends base_template|default:"faculties/base.html" %}
+
+
+{% block body_content %}
+
+  <div align="center">
+    <h1>{{ object.name }}</h1>
+  </div>
+  <div align="center">
+    <h2>Departments</h2>
+  </div>
+  <div>
+    <table cellpadding="5">
+      {% for dep in object.department_set.all %}
+        <tr>
+          <td>{{ dep }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <br>
+  <div>
+    <p><strong>Total students:</strong> {{ students }}</p>
+  </div>
+  <div>
+    <p><strong>Financing:</strong> {{ object.financing }}</p>
+  </div>
+
+{% endblock body_content %}
