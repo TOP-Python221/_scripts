@@ -1,5 +1,7 @@
 {% extends base_template|default:"faculties/base.html" %}
 
+{% load user_tags %}
+
 
 {% block body_content %}
 
@@ -12,8 +14,9 @@
   <div>
     <table cellpadding="5">
       {% for dep in object.department_set.all %}
+        {% concat_snake_lc object.acronym dep.acronym as url_name %}
         <tr>
-          <td>{{ dep }}</td>
+          <td><a href="{% url url_name %}">{{ dep }}</a></td>
         </tr>
       {% endfor %}
     </table>

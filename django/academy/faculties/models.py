@@ -30,6 +30,14 @@ class Department(Model):
     class Meta:
         db_table = 'departments'
 
+    @property
+    def acronym(self):
+        return ''.join(
+            w[0]
+            for w in str(self.name).lower().split()
+            if len(w) > 3
+        )
+
     def __str__(self):
         return f'{self.name}'
 

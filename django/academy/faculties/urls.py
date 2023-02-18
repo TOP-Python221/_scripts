@@ -1,7 +1,7 @@
 from django.urls import path
 
-from faculties.models import Faculty
-from faculties.views import MainPage, FacultyView, contact_view
+from faculties.models import Faculty, Department
+from faculties.views import MainPage, FacultyView, department_view, contact_view
 
 urlpatterns = []
 
@@ -11,6 +11,14 @@ for faculty in Faculty.objects.all():
         FacultyView.as_view(),
         kwargs={'pk': faculty.id},
         name=f'{faculty.acronym}',
+    )]
+
+for dep in Department.objects.all():
+    urlpatterns += [path(
+        f'{dep.faculty.acronym}/{dep.acronym}/',
+        department_view,
+        kwargs={'pk': dep.id},
+        name=f'{dep.faculty.acronym}_{dep.acronym}',
     )]
 
 urlpatterns += [
