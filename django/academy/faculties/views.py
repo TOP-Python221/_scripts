@@ -1,9 +1,10 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.forms import ModelForm
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, FormView
 
+from faculties.forms import GroupAdd, StudentAdd
 from faculties.models import Faculty, Department, Group
-from faculties.forms import GroupAdd
 
 
 class MainPage(ListView):
@@ -47,6 +48,18 @@ def department_view(request, pk: int):
                 department_id=pk,
             ).save()
         return redirect(f'{dep.faculty.acronym}_{dep.acronym}', pk=pk)
+
+
+class ProcessStudent(FormView):
+    form_class = StudentAdd
+    template_name = 'faculties/student_form.html'
+    success_url = '/student_add/'
+
+    def form_valid(self, form: ModelForm):
+        student = form.save()
+        group = form.cleaned_data['group']
+        group.students.add(student)
+        return redirect(self.success_url)
 
 
 def contact_view(request):
