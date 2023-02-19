@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import ModelForm
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -50,7 +51,7 @@ def department_view(request, pk: int):
         return redirect(f'{dep.faculty.acronym}_{dep.acronym}', pk=pk)
 
 
-class ProcessStudent(FormView):
+class ProcessStudent(LoginRequiredMixin, FormView):
     form_class = StudentAdd
     template_name = 'faculties/student_form.html'
     success_url = '/student_add/'

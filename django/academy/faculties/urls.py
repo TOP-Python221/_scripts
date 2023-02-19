@@ -23,6 +23,6 @@ for dep in Department.objects.all():
 
 urlpatterns += [
     path('contact/', contact_view, name='contact'),
-    path('student_add/', ProcessStudent.as_view(), name='contact'),
+    path('student_add/', ProcessStudent.as_view(), name='student_add'),
     path('', MainPage.as_view(), name='main'),
 ]

@@ -3,6 +3,12 @@
 
 {% block body_content %}
 
+  {% if next %}
+    <div align="center">
+      <p>You need to authorize for access that page.</p>
+    </div>
+  {% endif %}
+
   <div align="center">
     <form action="" method="post">
       {% csrf_token %}
