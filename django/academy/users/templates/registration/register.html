@@ -1,5 +1,7 @@
 {% extends base_template|default:"base.html" %}
 
+{% load bootstrap5 %}
+
 
 {% block body_header %}
 {% endblock body_header %}
@@ -7,12 +9,10 @@
 
 {% block body_content %}
 
-    <div align="center">
+  <div align="center">
     <form action="" method="post">
       {% csrf_token %}
-      <table cellpadding="10">
-        {{ form.as_table }}
-      </table>
+      {% bootstrap_form form layout='horizontal' %}
       <div align="center">
         <input type="submit" value="Register">
       </div>

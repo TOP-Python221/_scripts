@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # встроенные приложения
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'faculties.apps.FacultiesConfig',
+    # дополнительные приложения
+    'bootstrap5',
+    # пользовательские приложения
     'users.apps.UsersConfig',
 ]
 
