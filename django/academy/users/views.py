@@ -15,13 +15,3 @@ class RegisterView(FormView):
         form.save()
         return redirect(self.success_url)
 
-
-class UserLoginView(LoginView):
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context |= {
-            'username_widget': self.get_form().fields['username'].widget
-        }
-        return context
-
