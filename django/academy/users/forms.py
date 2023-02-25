@@ -11,7 +11,7 @@ class UserRegisterForm(UserCreationForm):
         }
     )
     email.widget.attrs.update({
-        'class': 'input_email',
+        'class': 'form-control',
     })
 
     class Meta:
